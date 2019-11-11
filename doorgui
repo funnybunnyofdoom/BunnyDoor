@@ -1,0 +1,150 @@
+--This program will include the APIs to 
+--control doors using a touch screen
+--and to display the status of the keycard
+
+--controlSide = "left"
+displaySide = "right"
+
+
+
+--controlMonitor = peripheral.wrap(controlSide)
+
+--cx,cy = controlMonitor.getSize()
+
+--create the display monitor bg
+function displaybg()
+
+  displayMonitor = peripheral.wrap("right")
+  dx,dy = displayMonitor.getSize()
+  ebgcolor = colors.lightGray
+  ebdcolor = colors.gray
+  gbgcolor = colors.lime
+  gbdcolor = colors.green
+  rbgcolor = colors.pink
+  rbdcolor = colors.red
+  bgc = colors.black
+  bdc = colors.gray
+  txc = colors.white
+  txt = " "
+  mode = ""
+
+  if not disk.isPresent("bottom") then 
+    mode = "empty" 
+  elseif disk.isPresent("bottom") then
+    mode = "good"
+  end 
+  if mode == "good" then
+    bgc = colors.lime
+    bdc = colors.green
+    txc = colors.black
+    txt = "GOOD"
+  elseif mode == "deny" then
+    bgc = colors.pink
+    bdc = colors.red
+    txc = colors.black
+    txt = "DENY"
+  elseif mode == "empty" then
+    bgc = colors.lightGray
+    bdc = colors.gray
+    txc = colors.white
+    txt = "EMPTY"
+  end
+  
+  
+
+  displayMonitor.setBackgroundColor(bdc)
+  displayMonitor.clear()
+  displayMonitor.setCursorPos(2,3)
+    displayMonitor.setTextColor(txc)
+  displayMonitor.write(txt)
+  displayMonitor.setBackgroundColor(bgc)
+  for i=0,dx,1 do
+    displayMonitor.setCursorPos(i+1,1)
+    displayMonitor.write(" ")
+  end
+  for i=0,dx,1 do
+    displayMonitor.setCursorPos(i+1,dy)
+    displayMonitor.write(" ")
+  end
+  for i=0,dy,1 do
+    displayMonitor.setCursorPos(1,i+1)
+    displayMonitor.write(" ")
+  end
+  for i=0,dy,1 do
+    displayMonitor.setCursorPos(dx,i+1)
+    displayMonitor.write(" ")
+  end
+    
+  displayMonitor.setBackgroundColor(colors.black)
+  displayMonitor.setTextColor(colors.white)
+
+  if mode == "good" then
+    doors.open()
+    return false
+  end
+
+end
+
+function displayInput(selection)
+  local selection = selection or 15
+
+  displayMonitor = peripheral.wrap("left")
+  displayMonitor.clear()
+  displayMonitor.setCursorPos(1,1)
+  displayMonitor.setBackgroundColor(colors.lime)
+  displayMonitor.write("   +   ")
+  displayMonitor.setCursorPos(1,2)
+  if selection == 50 then
+  displayMonitor.setBackgroundColor(colors.lightGray)
+  else
+    displayMonitor.setBackgroundColor(colors.black)
+  end
+  displayMonitor.write(" Open  ")
+  displayMonitor.setCursorPos(1,12)
+  displayMonitor.setBackgroundColor(colors.red)
+  displayMonitor.write("   -   ")
+  displayMonitor.setBackgroundColor(colors.black)
+  for i=0,8,1 do
+  local mult = 10^(0)
+    number = 45-(i*5)
+    
+    if selection == number then
+      displayMonitor.setBackgroundColor(colors.lightGray)
+    else
+      displayMonitor.setBackgroundColor(colors.black)
+    end
+    displayMonitor.setCursorPos(1,i+3)
+    displayMonitor.write("   ")
+    displayMonitor.write(number)
+    displayMonitor.setCursorPos(6,i+3)
+    if number == 5 then displayMonitor.setCursorPos(5,i+3) end
+    displayMonitor.write("   ")
+    
+  end
+
+end
+
+function timeSelector()
+Selection = 15 
+while true do 
+  event,side,x,y = os.pullEvent()
+  if event == "disk" then doorgui.displaybg()
+    doorgui.displaybg()
+  elseif event == "monitor_touch" then
+  if y==1 and Selection <= 45 then
+    Selection = Selection + 5
+  elseif y==12 and Selection >= 10 then
+    Selection = Selection - 5
+  end
+  displayInput(Selection)
+  local file = fs.open("documents/timer.cfg",'w')
+    file.write(Selection)
+  file.close()
+  end
+  
+end
+end
+
+--displaybg()
+--displayInput()
+--timeSelector()
