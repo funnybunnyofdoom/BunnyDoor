@@ -8,8 +8,4 @@ while true do
   if event == "monitor_touch" then
     doorgui.timeSelector()
   end
-  --if event == "disk" then
-    --doorgui.displaybg()
-    --doorgui.displaybg()
-  --end
 end
