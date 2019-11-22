@@ -1,4 +1,3 @@
 --This will contain the aps to load
 
-os.loadAPI("doors")
-os.loadAPI("doorgui")
+os.loadAPI("bunnyDoor")
