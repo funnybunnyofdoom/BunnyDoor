@@ -3,6 +3,6 @@ This is a self installing file. Upon being run, it will search for a copy of the
 -Install this program using pastebin. 
 -Uses monitors and disk drives to control doors
 
-To do:
+To do: \n
 -Vertical door support
 -"Light" version to use only a disk drive.
